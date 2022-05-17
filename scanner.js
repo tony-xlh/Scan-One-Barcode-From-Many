@@ -121,14 +121,17 @@ async function captureFrameAndDecode(){
     decoding = true;
     var results = await barcodeReader.decode(frame);
     decoding = false;
-    drawOverlay(results, frame)
+    if (currentMode != 2) {
+      drawOverlay(results, frame);
+    }
     if (results.length>0) {
       if (currentMode === 0) {
         stopAndDisplayResult(results[0].barcodeText);
       }else if (currentMode === 1) {
         stopAndDisplayResult(results[0].barcodeText);
       }else if (currentMode === 2) {
-        stopAndDisplayResult(results[0].barcodeText);
+        checkWithRegex(results);
+        drawOverlay(results,frame);
       }else if (currentMode === 3) {
         stopDecoding();
         alert("Please select a barcode.");
@@ -153,7 +156,13 @@ function drawOverlay(results, frame){
     var points = getPointsData(lr);
     var polygon = document.createElementNS("http://www.w3.org/2000/svg","polygon");
     polygon.setAttribute("points",points);
-    polygon.setAttribute("class","barcode-polygon");
+
+    if (result["unwanted"] === true) {
+      polygon.setAttribute("class","barcode-polygon-unwanted");
+    }else{
+      polygon.setAttribute("class","barcode-polygon");
+    }
+
     polygon.setAttribute("text",result.barcodeText);
     
     polygon.onclick = function(event){
@@ -170,6 +179,18 @@ function drawOverlay(results, frame){
 
     svgOverlay.append(polygon);
     svgOverlay.append(text);
+  }
+}
+
+function checkWithRegex(results) {
+  var expression = document.getElementById("regex");
+  for (let index = 0; index < results.length; index++) {
+    let result = results[index];
+    if (result.barcodeText.search(expression) === -1) {
+      result["unwanted"] = true;
+    }else{
+      stopAndDisplayResult(result.barcodeText);
+    }
   }
 }
 
