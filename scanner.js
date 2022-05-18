@@ -160,6 +160,7 @@ async function captureFrameAndDecode(){
 
 function showSelection(){
   stopDecoding();
+  cameraEnhancer.pause();
   Toastify({
     text: "Barcodes found. Please select a barcode.",
     duration: 3000,
