@@ -1,2 +1,5 @@
 # Scan-One-Barcode-From-Many
-A simple demo of using Dynamsoft Barcode Reader JavaScript to scan one barcode from many barcodes.
+
+A simple web app demo of scanning one barcode from many barcodes. It uses [Dynamsoft Camera Enhancer](https://www.dynamsoft.com/camera-enhancer/docs/introduction/) to get camera video frames and uses [Dynamsoft Barcode Reader](https://www.dynamsoft.com/barcode-reader/overview/) to read barcodes from the frames.
+
+[Online demo](https://blog.xulihang.me/Scan-One-Barcode-From-Many/)
