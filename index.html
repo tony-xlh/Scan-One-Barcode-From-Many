@@ -6,6 +6,8 @@
   <title>Barcode Detector</title>  
   <script src="https://cdn.jsdelivr.net/npm/dynamsoft-javascript-barcode@9.0.2/dist/dbr.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@2.3.1/dist/dce.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <link rel="stylesheet" type="text/css" href="scanner.css"/>
 </head>
 <body>
@@ -26,8 +28,14 @@
       <div>
         Regular expression:<input type="text" id="regex">
       </div>
+      <div>
+        Ask users to check the result: <input type="checkbox" id="forceUserInteractionChk" checked>
+      </div>
     </div>
-    <div id="result"></div>
+    <div>
+      Result:
+      <div id="result"></div>
+    </div>
   </div>
   <div id="cameraContainer" class="fullscreen" style="display: none;">
     <div class="dce-video-container fullscreen"></div>

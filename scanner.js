@@ -64,6 +64,7 @@ init();
 
 async function init(){
   Dynamsoft.DBR.BarcodeReader.license = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==";
+  
   barcodeReader = await Dynamsoft.DBR.BarcodeReader.createInstance();
 
   cameraEnhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
@@ -121,26 +122,52 @@ async function captureFrameAndDecode(){
     decoding = true;
     var results = await barcodeReader.decode(frame);
     decoding = false;
+
+    var forceUserInteraction = document.getElementById("forceUserInteractionChk").checked;
     if (currentMode != 2) {
       drawOverlay(results, frame);
     }
     if (results.length>0) {
       if (currentMode === 0) {
-        stopAndDisplayResult(results[0].barcodeText);
+        if (forceUserInteraction === false) {
+          stopAndDisplayResult(results[0].barcodeText);
+        }else{
+          showSelection();
+        }
       }else if (currentMode === 1) {
-        stopAndDisplayResult(results[0].barcodeText);
+        if (forceUserInteraction === false) {
+          stopAndDisplayResult(results[0].barcodeText);
+        }else{
+          showSelection();
+        }
       }else if (currentMode === 2) {
-        checkWithRegex(results);
+        console.log("regular expression");
+        var matched = checkWithRegex(results);
         drawOverlay(results,frame);
+        if (matched) {
+          if (forceUserInteraction){
+            showSelection();
+          }else{
+            stopAndDisplayResult(results[0].barcodeText);
+          }
+        }
       }else if (currentMode === 3) {
-        stopDecoding();
-        alert("Please select a barcode.");
+        showSelection();
       }
-      
     }
-    
   }
 }
+
+function showSelection(){
+  stopDecoding();
+  Toastify({
+    text: "Barcodes found. Please select a barcode.",
+    duration: 3000,
+    gravity: "top",
+    position: "center"
+  }).showToast();
+}
+
 
 function drawOverlay(results, frame){
   svgOverlay.innerHTML = "";
@@ -183,15 +210,17 @@ function drawOverlay(results, frame){
 }
 
 function checkWithRegex(results) {
-  var expression = document.getElementById("regex");
+  var matched = false;
+  var expression = document.getElementById("regex").value;
   for (let index = 0; index < results.length; index++) {
     let result = results[index];
     if (result.barcodeText.search(expression) === -1) {
       result["unwanted"] = true;
     }else{
-      stopAndDisplayResult(result.barcodeText);
+      matched = true;
     }
   }
+  return matched;
 }
 
 function getPointsData(lr){
