@@ -163,8 +163,8 @@ function showSelection(){
   cameraEnhancer.pause();
   Toastify({
     text: "Barcodes found. Please select a barcode.",
-    duration: 3000,
-    gravity: "top",
+    duration: 2000,
+    gravity: "bottom",
     position: "center"
   }).showToast();
 }
@@ -202,9 +202,9 @@ function drawOverlay(results, frame){
     text.innerHTML = result.barcodeText;
     text.setAttribute("x",lr.x1);
     text.setAttribute("y",lr.y1);
-    text.setAttribute("fill","red");
-    text.setAttribute("fontSize","20");
-
+    text.setAttribute("fill","white");
+    text.setAttribute("font-size","40");
+    text.style.textShadow = "0px 0px 5px purple";
     svgOverlay.append(polygon);
     svgOverlay.append(text);
   }
